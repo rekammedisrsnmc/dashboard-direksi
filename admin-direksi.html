@@ -212,7 +212,7 @@ main{flex:1;padding:40px 20px}
       <input type="hidden" id="editId" value="">
       
       <div class="form-group">
-        <label>Pilih Bagian</label>
+        <label>Pilih Kartu</label>
         <select id="cardSelect">
           <!-- MORNING DASHBOARD REVIEW -->
           <optgroup label="📊 MORNING DASHBOARD REVIEW">
@@ -238,12 +238,13 @@ main{flex:1;padding:40px 20px}
         </div>
         <div class="form-group">
           <label>URL (Link)</label>
-          <input type="url" id="itemUrl" placeholder="Isi link" required>
+          <input type="url" id="itemUrl" placeholder="https://drive.google.com/..." required>
         </div>
       </div>
       
       <div style="display:flex;gap:12px;flex-wrap:wrap;">
         <button class="btn btn-primary" id="saveItemBtn"><i class="fas fa-save"></i> Tambah Item</button>
+        <button class="btn btn-secondary" id="resetFormBtn"><i class="fas fa-undo"></i> Reset Form</button>
         <button class="btn btn-warning" id="refreshDataBtn"><i class="fas fa-sync"></i> Refresh</button>
         <button class="btn btn-danger" id="clearAllBtn"><i class="fas fa-trash"></i> Hapus Semua</button>
       </div>
