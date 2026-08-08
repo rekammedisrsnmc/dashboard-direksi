@@ -1,0 +1,1097 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<link rel="icon" href="logorekammedis.ico">
+<title>Dashboard Direksi | RSU An'Nimah</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<style>
+/* ===== SEMBUNYIKAN ICON MATA BAWAAN EDGE ===== */
+input[type="password"]::-ms-reveal,
+input[type="password"]::-webkit-clear-button,
+input[type="password"]::-webkit-credentials-auto-fill-button {
+  display: none !important;
+  -webkit-appearance: none !important;
+}
+/* ===== END ===== */
+
+:root{
+  --green:#2fa36b;
+  --green-dark:#1f7f53;
+  --green-light:#e8f5ee;
+  --bg:#eef5f2;
+  --card:#ffffff;
+  --shadow:0 12px 30px rgba(0,0,0,.12);
+  --radius:14px;
+  --red:#dc3545;
+  --red-dark:#b02a37;
+}
+*{margin:0;padding:0;box-sizing:border-box;font-family:'Segoe UI',-apple-system,BlinkMacSystemFont,sans-serif;}
+body{background:var(--bg);min-height:100vh;display:flex;flex-direction:column;}
+header{
+  background:linear-gradient(135deg,#ffffff,#e9f7f0);
+  padding:15px 20px;
+  box-shadow:var(--shadow);
+  position:sticky;
+  top:0;
+  z-index:100;
+  transition:box-shadow 0.3s ease, background 0.3s ease;
+}
+header.scrolled{box-shadow:0 8px 32px rgba(0,0,0,0.25);background:#ffffff;}
+.logo{display:flex;align-items:center;gap:15px;flex-wrap:wrap;}
+.logo img{width:300px;height:70px;object-fit:contain;}
+.logo .admin-badge{
+  background:var(--green);
+  color:#fff;
+  padding:8px 18px;
+  border-radius:40px;
+  font-size:14px;
+  font-weight:600;
+  display:flex;
+  align-items:center;
+  gap:8px;
+  box-shadow:0 4px 10px rgba(47,163,107,0.3);
+  transition:0.2s;
+  text-decoration:none;
+  border:none;
+  cursor:pointer;
+}
+.logo .admin-badge:hover{background:var(--green-dark);transform:scale(1.02);}
+.logo .btn-group{display:flex;gap:10px;margin-left:auto;flex-wrap:wrap;align-items:center;}
+.logo .btn-group .btn-change-pwd{
+  background:#6c757d;
+  border:none;
+  cursor:pointer;
+}
+.logo .btn-group .btn-change-pwd:hover{background:#5a6268;}
+
+.btn-logout{
+  background:var(--red);
+  color:#fff;
+  border:none;
+  padding:8px 18px;
+  border-radius:40px;
+  font-size:14px;
+  font-weight:600;
+  cursor:pointer;
+  display:flex;
+  align-items:center;
+  gap:8px;
+  transition:0.2s;
+  box-shadow:0 4px 10px rgba(220,53,69,0.3);
+}
+.btn-logout:hover{
+  background:var(--red-dark);
+  transform:scale(1.02);
+}
+.btn-logout i{font-size:14px;}
+
+main{flex:1;padding:40px 20px}
+.container{max-width:1200px;margin:auto;animation:fadeUp .6s ease;}
+.section-divider{
+  display:flex;
+  align-items:center;
+  gap:18px;
+  margin:45px 0 35px 0;
+}
+.section-divider .line{
+  flex:1;
+  height:2px;
+  background:linear-gradient(to right, transparent, var(--green), transparent);
+}
+.section-divider .label{
+  font-size:13px;
+  font-weight:700;
+  color:var(--green-dark);
+  background:#fff;
+  padding:6px 20px;
+  border-radius:30px;
+  box-shadow:var(--shadow);
+  letter-spacing:1px;
+  text-transform:uppercase;
+  white-space:nowrap;
+}
+.section-divider .label i{margin-right:8px;}
+.title-container{
+  background:#fff;
+  border-radius:22px;
+  padding:30px;
+  box-shadow:var(--shadow);
+  display:flex;
+  gap:20px;
+  align-items:center;
+  margin-bottom:40px;
+}
+.title-icon{font-size:40px;color:var(--green);}
+.title-text h1{font-size:34px;color:var(--green-dark);}
+.title-text p{margin-top:6px;color:#555;font-size:15px;}
+.indicator-grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(340px,1fr));
+  gap:24px;
+}
+.indicator-card{
+  background:#fff;
+  border-radius:22px;
+  box-shadow:var(--shadow);
+  overflow:hidden;
+  transition:.3s;
+  display:flex;
+  flex-direction:column;
+}
+.indicator-card:hover{
+  transform:translateY(-4px);
+  box-shadow:0 12px 40px rgba(0,0,0,.12);
+}
+.card-header{
+  background:var(--bg);
+  padding:16px 20px;
+  display:flex;
+  align-items:center;
+  gap:12px;
+  border-bottom:1px solid #e0ece6;
+  flex-shrink:0;
+}
+.card-header i{
+  font-size:20px;
+  color:var(--green);
+  width:36px;
+  height:36px;
+  background:#fff;
+  border-radius:10px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  box-shadow:0 2px 8px rgba(0,0,0,.06);
+}
+.card-header h3{font-size:15px;color:var(--green-dark);font-weight:700;}
+.card-body{padding:12px 8px 12px 20px;flex:1;}
+.card-body ul{list-style:none;}
+.card-body ul li{
+  padding:8px 12px 8px 0;
+  border-bottom:1px solid #f5f5f5;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:10px;
+  font-size:14px;
+  color:#444;
+  transition:.2s;
+}
+.card-body ul li:last-child{border-bottom:0;}
+.card-body ul li:hover{
+  background:#f8fbf9;
+  padding-left:6px;
+  border-radius:6px;
+}
+.card-body ul li .link-icon{
+  color:var(--green);
+  text-decoration:none;
+  font-size:13px;
+  display:flex;
+  align-items:center;
+  gap:6px;
+  font-weight:500;
+  padding:4px 12px;
+  border-radius:20px;
+  background:var(--bg);
+  transition:.3s;
+  white-space:nowrap;
+  flex-shrink:0;
+}
+.card-body ul li .link-icon:hover{
+  background:#097e5bc2;
+  color:#fff;
+}
+.card-body ul li .link-icon i{font-size:12px;}
+.grid-divider{grid-column:1 / -1;margin:10px 0 5px 0;}
+
+/* ===== LOADING SPINNER ===== */
+.spinner-container{
+  grid-column:1/-1;
+  text-align:center;
+  padding:80px 20px;
+}
+.spinner{
+  display:inline-block;
+  width:50px;
+  height:50px;
+  border:4px solid #e0ece6;
+  border-top:4px solid var(--green);
+  border-radius:50%;
+  animation:spin 0.8s linear infinite;
+}
+@keyframes spin{
+  0%{transform:rotate(0deg)}
+  100%{transform:rotate(360deg)}
+}
+.spinner-container p{
+  margin-top:16px;
+  color:#888;
+  font-size:15px;
+}
+
+.empty-state{
+  text-align:center;
+  padding:60px 20px;
+  color:#888;
+  grid-column:1/-1;
+}
+.empty-state i{font-size:60px;color:var(--green);opacity:0.3;margin-bottom:20px;display:block;}
+.empty-state h3{color:#555;margin-bottom:10px;}
+
+/* ===== PASSWORD OVERLAY ===== */
+.password-overlay{
+  position:fixed;
+  top:0;
+  left:0;
+  width:100%;
+  height:100%;
+  background:rgba(0,0,0,0.7);
+  backdrop-filter:blur(8px);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  z-index:9999;
+  animation:fadeUp .4s ease;
+}
+.password-overlay.hidden{display:none !important;}
+.password-box{
+  background:#fff;
+  border-radius:28px;
+  padding:45px 40px;
+  max-width:420px;
+  width:90%;
+  box-shadow:0 24px 60px rgba(0,0,0,0.3);
+  text-align:center;
+}
+.password-box .lock-icon{
+  font-size:60px;
+  color:var(--green);
+  background:var(--bg);
+  width:100px;
+  height:100px;
+  border-radius:50%;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  margin:0 auto 20px auto;
+}
+.password-box h2{
+  color:var(--green-dark);
+  margin-bottom:8px;
+  font-size:24px;
+}
+.password-box p{
+  color:#888;
+  font-size:14px;
+  margin-bottom:25px;
+}
+.password-box .input-group{
+  position:relative;
+  margin-bottom:20px;
+}
+.password-box .input-group .input-icon{
+  position:absolute;
+  left:16px;
+  top:50%;
+  transform:translateY(-50%);
+  color:#aaa;
+  font-size:16px;
+  pointer-events:none;
+  z-index:2;
+}
+.password-box .input-group .toggle-pwd{
+  position:absolute;
+  right:14px;
+  top:50%;
+  transform:translateY(-50%);
+  cursor:pointer;
+  color:#aaa;
+  background:transparent;
+  border:none;
+  font-size:18px;
+  padding:0;
+  z-index:2;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  width:30px;
+  height:30px;
+}
+.password-box .input-group .toggle-pwd:hover{color:var(--green);}
+.password-box .input-group .toggle-pwd:focus{outline:none;}
+.password-box input{
+  width:100%;
+  padding:14px 50px 14px 46px;
+  border:2px solid #d4e2dc;
+  border-radius:14px;
+  font-size:16px;
+  transition:0.2s;
+  background:#fff;
+  position:relative;
+  z-index:1;
+}
+.password-box input:focus{
+  border-color:var(--green);
+  outline:none;
+  box-shadow:0 0 0 3px rgba(47,163,107,0.2);
+}
+.password-box .btn-login{
+  width:100%;
+  padding:14px;
+  background:var(--green);
+  color:#fff;
+  border:none;
+  border-radius:14px;
+  font-size:16px;
+  font-weight:700;
+  cursor:pointer;
+  transition:0.2s;
+}
+.password-box .btn-login:hover{
+  background:var(--green-dark);
+  transform:scale(1.02);
+}
+.password-box .btn-login:disabled{
+  opacity:0.6;
+  cursor:not-allowed;
+}
+.password-box .error-msg{
+  color:#d9534f;
+  font-size:13px;
+  margin-top:10px;
+  min-height:20px;
+}
+.password-box .hint{
+  font-size:12px;
+  color:#aaa;
+  margin-top:15px;
+  cursor:pointer;
+  transition:0.2s;
+}
+.password-box .hint:hover{color:var(--green);}
+
+/* ===== CHANGE PASSWORD MODAL ===== */
+.modal-overlay{
+  position:fixed;
+  top:0;
+  left:0;
+  width:100%;
+  height:100%;
+  background:rgba(0,0,0,0.6);
+  backdrop-filter:blur(4px);
+  display:none;
+  align-items:center;
+  justify-content:center;
+  z-index:10000;
+}
+.modal-overlay.show{display:flex;}
+.modal-box{
+  background:#fff;
+  border-radius:28px;
+  padding:35px;
+  max-width:420px;
+  width:90%;
+  box-shadow:0 24px 60px rgba(0,0,0,0.3);
+  animation:fadeUp .3s ease;
+}
+.modal-box h3{
+  color:var(--green-dark);
+  margin-bottom:8px;
+  display:flex;
+  align-items:center;
+  gap:10px;
+}
+.modal-box h3 i{color:var(--green);}
+.modal-box .sub{
+  color:#888;
+  font-size:14px;
+  margin-bottom:20px;
+}
+.modal-box .form-group{
+  margin-bottom:16px;
+}
+.modal-box .form-group label{
+  display:block;
+  font-weight:600;
+  color:#1f3b2f;
+  margin-bottom:4px;
+  font-size:14px;
+}
+.modal-box .form-group .input-wrapper{
+  position:relative;
+}
+.modal-box .form-group .input-wrapper .input-icon{
+  position:absolute;
+  left:14px;
+  top:50%;
+  transform:translateY(-50%);
+  color:#aaa;
+  font-size:14px;
+  pointer-events:none;
+  z-index:2;
+}
+.modal-box .form-group .input-wrapper .toggle-pwd{
+  position:absolute;
+  right:12px;
+  top:50%;
+  transform:translateY(-50%);
+  cursor:pointer;
+  color:#aaa;
+  background:transparent;
+  border:none;
+  font-size:17px;
+  padding:0;
+  z-index:2;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  width:28px;
+  height:28px;
+}
+.modal-box .form-group .input-wrapper .toggle-pwd:hover{color:var(--green);}
+.modal-box .form-group .input-wrapper .toggle-pwd:focus{outline:none;}
+.modal-box .form-group input{
+  width:100%;
+  padding:12px 46px 12px 44px;
+  border:1.5px solid #d4e2dc;
+  border-radius:12px;
+  font-size:14px;
+  transition:0.2s;
+  background:#fff;
+  z-index:1;
+  position:relative;
+}
+.modal-box .form-group input:focus{
+  border-color:var(--green);
+  outline:none;
+  box-shadow:0 0 0 3px rgba(47,163,107,0.2);
+}
+.modal-box .modal-actions{
+  display:flex;
+  gap:10px;
+  margin-top:20px;
+}
+.modal-box .modal-actions button{
+  flex:1;
+  padding:12px;
+  border:none;
+  border-radius:12px;
+  font-weight:700;
+  cursor:pointer;
+  transition:0.2s;
+}
+.modal-box .modal-actions .btn-save{
+  background:var(--green);
+  color:#fff;
+}
+.modal-box .modal-actions .btn-save:hover{background:var(--green-dark);}
+.modal-box .modal-actions .btn-save:disabled{
+  opacity:0.6;
+  cursor:not-allowed;
+}
+.modal-box .modal-actions .btn-cancel{
+  background:#e9ecef;
+  color:#555;
+}
+.modal-box .modal-actions .btn-cancel:hover{background:#dee2e6;}
+.modal-box .modal-actions .btn-save .spinner-sm{
+  display:inline-block;
+  width:18px;
+  height:18px;
+  border:2px solid #fff;
+  border-top:2px solid transparent;
+  border-radius:50%;
+  animation:spin 0.8s linear infinite;
+  vertical-align:middle;
+  margin-right:6px;
+}
+
+footer{
+  background:#fff;
+  padding:30px 20px;
+  color:#444;
+  box-shadow:var(--shadow);
+  margin-top:20px;
+}
+.small{font-size:14px;color:#666}
+@keyframes fadeUp{
+  from{opacity:0;transform:translateY(20px)}
+  to{opacity:1}
+}
+@media(max-width:900px){
+  .indicator-grid{grid-template-columns:1fr;}
+  .title-text h1{font-size:26px;}
+  .logo img{width:200px;height:50px;}
+  .logo .btn-group{margin-left:0;width:100%;justify-content:center;}
+}
+@media(max-width:500px){
+  .logo img{width:150px;height:40px;}
+  .section-divider .label{font-size:11px;padding:4px 14px;}
+  .password-box{padding:30px 20px;}
+  .logo .btn-group .btn-logout{font-size:12px;padding:6px 12px;}
+  .logo .btn-group .admin-badge{font-size:12px;padding:6px 12px;}
+}
+</style>
+</head>
+<body>
+
+<!-- ===== PASSWORD OVERLAY ===== -->
+<div class="password-overlay hidden" id="passwordOverlay">
+  <div class="password-box">
+    <div class="lock-icon">
+      <i class="fas fa-lock"></i>
+    </div>
+    <h2>🔐 Akses Direksi</h2>
+    <p>Masukkan password untuk melihat dashboard</p>
+    <div class="input-group">
+      <i class="fas fa-key input-icon"></i>
+      <input type="password" id="passwordInput" placeholder="Masukkan password..." autofocus>
+      <button class="toggle-pwd" id="toggleLoginPwd" type="button" aria-label="Tampilkan password">
+        <i class="fas fa-eye"></i>
+      </button>
+    </div>
+    <button class="btn-login" id="loginBtn">
+      <i class="fas fa-sign-in-alt"></i> Masuk
+    </button>
+    <div class="error-msg" id="errorMsg"></div>
+  </div>
+</div>
+
+<!-- ===== CHANGE PASSWORD MODAL ===== -->
+<div class="modal-overlay" id="changePasswordModal">
+  <div class="modal-box">
+    <h3><i class="fas fa-key"></i> Ubah Password</h3>
+    <p class="sub">Ganti password akses dashboard direksi</p>
+    <div class="form-group">
+      <label>Password Lama</label>
+      <div class="input-wrapper">
+        <i class="fas fa-lock input-icon"></i>
+        <input type="password" id="oldPasswordInput" placeholder="Masukkan password lama...">
+        <button class="toggle-pwd" id="toggleOldPwd" type="button" aria-label="Tampilkan password">
+          <i class="fas fa-eye"></i>
+        </button>
+      </div>
+    </div>
+    <div class="form-group">
+      <label>Password Baru</label>
+      <div class="input-wrapper">
+        <i class="fas fa-lock input-icon"></i>
+        <input type="password" id="newPasswordInput" placeholder="Masukkan password baru (min 4 karakter)...">
+        <button class="toggle-pwd" id="toggleNewPwd" type="button" aria-label="Tampilkan password">
+          <i class="fas fa-eye"></i>
+        </button>
+      </div>
+    </div>
+    <div class="form-group">
+      <label>Konfirmasi Password Baru</label>
+      <div class="input-wrapper">
+        <i class="fas fa-lock input-icon"></i>
+        <input type="password" id="confirmPasswordInput" placeholder="Konfirmasi password baru...">
+        <button class="toggle-pwd" id="toggleConfirmPwd" type="button" aria-label="Tampilkan password">
+          <i class="fas fa-eye"></i>
+        </button>
+      </div>
+    </div>
+    <div class="modal-actions">
+      <button class="btn-cancel" id="cancelChangeBtn">Batal</button>
+      <button class="btn-save" id="saveChangeBtn"><i class="fas fa-save"></i> Simpan</button>
+    </div>
+    <div class="error-msg" id="changeErrorMsg" style="margin-top:10px;text-align:center;"></div>
+  </div>
+</div>
+
+<header id="mainHeader">
+  <div class="logo">
+    <img src="logopanjang.png" alt="Logo RSU An'Nimah">
+    <div class="btn-group">
+      <button class="admin-badge btn-change-pwd" id="changePasswordBtn">
+        <i class="fas fa-key"></i> Ubah Password
+      </button>
+      <a href="admin-direksi.html" class="admin-badge">
+        <i class="fas fa-user-cog"></i> Dashboard Admin
+      </a>
+      <button class="btn-logout" id="logoutBtn">
+        <i class="fas fa-sign-out-alt"></i> Keluar
+      </button>
+    </div>
+  </div>
+</header>
+
+<main>
+<div class="container">
+  <div class="title-container">
+    <div class="title-icon"><i class="fas fa-clipboard-list"></i></div>
+    <div class="title-text">
+      <h1>DASHBOARD DIREKSI</h1>
+      <p>Morning Review - Ringkasan Kinerja Harian RSU An'Nimah</p>
+    </div>
+  </div>
+  <div class="indicator-grid" id="dashboardGrid">
+    <div class="spinner-container">
+      <div class="spinner"></div>
+      <p>Memuat data...</p>
+    </div>
+  </div>
+</div>
+</main>
+
+<footer>
+  <strong>MEDICAL RECORD</strong>
+  <div class="small">© 2025 RSU An'Nimah • Unit Rekam Medis</div>
+</footer>
+
+<script>
+// ========== KONFIGURASI ==========
+const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzN_ZQVrU0_7a7MRyrYZ103o3fT9XEsWnzacxm_9uipPWRnos2GXeraxikRmeLu3XCa/exec';
+const DEFAULT_PASSWORD = 'admin123';
+const STORAGE_KEY = 'direksi_password';
+const AUTH_KEY = 'direksi_auth';
+
+// ========== PASSWORD MANAGEMENT ==========
+function fetchPasswordFromSheet() {
+  return new Promise((resolve) => {
+    const cached = localStorage.getItem(STORAGE_KEY);
+    if (cached) {
+      resolve(cached);
+      return;
+    }
+    
+    fetch(APPS_SCRIPT_URL + '?action=getPassword')
+      .then(res => {
+        if (!res.ok) throw new Error('Network error');
+        return res.json();
+      })
+      .then(data => {
+        if (data && data.currentPassword) {
+          localStorage.setItem(STORAGE_KEY, data.currentPassword);
+          resolve(data.currentPassword);
+        } else {
+          localStorage.setItem(STORAGE_KEY, DEFAULT_PASSWORD);
+          resolve(DEFAULT_PASSWORD);
+        }
+      })
+      .catch(() => {
+        const cached = localStorage.getItem(STORAGE_KEY) || DEFAULT_PASSWORD;
+        resolve(cached);
+      });
+  });
+}
+
+function savePasswordToSheet(newPassword, oldPassword) {
+  return new Promise((resolve) => {
+    const payload = {
+      action: 'updatePassword',
+      password: newPassword,
+      oldPassword: oldPassword
+    };
+    
+    fetch(APPS_SCRIPT_URL, {
+      method: 'POST',
+      mode: 'no-cors',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload)
+    })
+    .then(() => {
+      localStorage.setItem(STORAGE_KEY, newPassword);
+      resolve(true);
+    })
+    .catch(() => {
+      localStorage.setItem(STORAGE_KEY, newPassword);
+      resolve(true);
+    });
+  });
+}
+
+// ========== DOM REFS ==========
+const overlay = document.getElementById('passwordOverlay');
+const passwordInput = document.getElementById('passwordInput');
+const loginBtn = document.getElementById('loginBtn');
+const errorMsg = document.getElementById('errorMsg');
+const showHintBtn = document.getElementById('showHintBtn');
+const changePwdBtn = document.getElementById('changePasswordBtn');
+const changeModal = document.getElementById('changePasswordModal');
+const oldPassInput = document.getElementById('oldPasswordInput');
+const newPassInput = document.getElementById('newPasswordInput');
+const confirmPassInput = document.getElementById('confirmPasswordInput');
+const saveChangeBtn = document.getElementById('saveChangeBtn');
+const cancelChangeBtn = document.getElementById('cancelChangeBtn');
+const changeErrorMsg = document.getElementById('changeErrorMsg');
+const logoutBtn = document.getElementById('logoutBtn');
+
+let isAuthenticated = false;
+
+// ========== TOGGLE PASSWORD VISIBILITY ==========
+function setupTogglePassword(buttonId, inputId) {
+  const btn = document.getElementById(buttonId);
+  const input = document.getElementById(inputId);
+  if (!btn || !input) return;
+  
+  btn.addEventListener('click', function(e) {
+    e.preventDefault();
+    e.stopPropagation();
+    const icon = this.querySelector('i');
+    if (input.type === 'password') {
+      input.type = 'text';
+      icon.className = 'fas fa-eye-slash';
+    } else {
+      input.type = 'password';
+      icon.className = 'fas fa-eye';
+    }
+    input.focus();
+  });
+}
+
+// Setup semua toggle
+setupTogglePassword('toggleLoginPwd', 'passwordInput');
+setupTogglePassword('toggleOldPwd', 'oldPasswordInput');
+setupTogglePassword('toggleNewPwd', 'newPasswordInput');
+setupTogglePassword('toggleConfirmPwd', 'confirmPasswordInput');
+
+// ========== AUTH FUNCTIONS ==========
+function checkAuthentication() {
+  if (sessionStorage.getItem(AUTH_KEY) === 'true') {
+    isAuthenticated = true;
+    overlay.classList.add('hidden');
+    return true;
+  }
+  return false;
+}
+
+async function login() {
+  const inputPass = passwordInput.value.trim();
+  const storedPass = await fetchPasswordFromSheet();
+  
+  loginBtn.disabled = true;
+  loginBtn.innerHTML = '<span class="spinner-sm" style="display:inline-block;width:20px;height:20px;border:2px solid #fff;border-top:2px solid transparent;border-radius:50%;animation:spin 0.8s linear infinite;vertical-align:middle;margin-right:8px;"></span> Memeriksa...';
+  
+  if (inputPass === storedPass) {
+    isAuthenticated = true;
+    sessionStorage.setItem(AUTH_KEY, 'true');
+    overlay.classList.add('hidden');
+    errorMsg.textContent = '';
+    passwordInput.value = '';
+    loadData();
+  } else {
+    errorMsg.textContent = '❌ Password salah! Silakan coba lagi.';
+    passwordInput.value = '';
+    passwordInput.focus();
+    document.querySelector('.password-box').style.animation = 'shake 0.4s ease';
+    setTimeout(() => {
+      document.querySelector('.password-box').style.animation = '';
+    }, 400);
+  }
+  
+  loginBtn.disabled = false;
+  loginBtn.innerHTML = '<i class="fas fa-sign-in-alt"></i> Masuk';
+}
+
+function logout() {
+  sessionStorage.removeItem(AUTH_KEY);
+  isAuthenticated = false;
+  overlay.classList.remove('hidden');
+  passwordInput.value = '';
+  passwordInput.focus();
+  errorMsg.textContent = '';
+  
+  const grid = document.getElementById('dashboardGrid');
+  grid.innerHTML = `
+    <div class="empty-state">
+      <i class="fas fa-lock"></i>
+      <h3>Session Berakhir</h3>
+      <p>Silakan login kembali untuk mengakses dashboard</p>
+    </div>
+  `;
+}
+
+// ========== SHAKE ANIMATION ==========
+const styleShake = document.createElement('style');
+styleShake.textContent = `
+  @keyframes shake {
+    0%, 100% { transform: translateX(0); }
+    25% { transform: translateX(-10px); }
+    75% { transform: translateX(10px); }
+  }
+`;
+document.head.appendChild(styleShake);
+
+// ========== EVENT LISTENERS ==========
+loginBtn.addEventListener('click', login);
+
+passwordInput.addEventListener('keydown', function(e) {
+  if (e.key === 'Enter') {
+    e.preventDefault();
+    login();
+  }
+});
+
+logoutBtn.addEventListener('click', logout);
+
+showHintBtn.addEventListener('click', async () => {
+  const stored = await fetchPasswordFromSheet();
+  alert(`🔑 Password saat ini: "${stored}"\n\nAnda bisa mengubah password melalui tombol "Ubah Password" di header.`);
+});
+
+changePwdBtn.addEventListener('click', () => {
+  if (!isAuthenticated) {
+    alert('Silakan login terlebih dahulu!');
+    return;
+  }
+  changeModal.classList.add('show');
+  oldPassInput.value = '';
+  newPassInput.value = '';
+  confirmPassInput.value = '';
+  changeErrorMsg.textContent = '';
+  oldPassInput.focus();
+});
+
+cancelChangeBtn.addEventListener('click', () => {
+  changeModal.classList.remove('show');
+  saveChangeBtn.disabled = false;
+  saveChangeBtn.innerHTML = '<i class="fas fa-save"></i> Simpan';
+});
+
+changeModal.addEventListener('click', (e) => {
+  if (e.target === changeModal) {
+    changeModal.classList.remove('show');
+    saveChangeBtn.disabled = false;
+    saveChangeBtn.innerHTML = '<i class="fas fa-save"></i> Simpan';
+  }
+});
+
+saveChangeBtn.addEventListener('click', async function() {
+  const oldPass = oldPassInput.value.trim();
+  const newPass = newPassInput.value.trim();
+  const confirmPass = confirmPassInput.value.trim();
+  const storedPass = await fetchPasswordFromSheet();
+  
+  this.disabled = true;
+  this.innerHTML = '<span class="spinner-sm"></span> Menyimpan...';
+  
+  if (oldPass !== storedPass) {
+    changeErrorMsg.textContent = '❌ Password lama salah!';
+    this.disabled = false;
+    this.innerHTML = '<i class="fas fa-save"></i> Simpan';
+    return;
+  }
+  if (newPass.length < 4) {
+    changeErrorMsg.textContent = '❌ Password baru minimal 4 karakter!';
+    this.disabled = false;
+    this.innerHTML = '<i class="fas fa-save"></i> Simpan';
+    return;
+  }
+  if (newPass !== confirmPass) {
+    changeErrorMsg.textContent = '❌ Konfirmasi password tidak cocok!';
+    this.disabled = false;
+    this.innerHTML = '<i class="fas fa-save"></i> Simpan';
+    return;
+  }
+  
+  const saved = await savePasswordToSheet(newPass, oldPass);
+  
+  if (saved) {
+    changeErrorMsg.textContent = '';
+    changeModal.classList.remove('show');
+    alert('✅ Password berhasil diubah!\n\nPassword baru: ' + newPass);
+    this.disabled = false;
+    this.innerHTML = '<i class="fas fa-save"></i> Simpan';
+    sessionStorage.setItem(AUTH_KEY, 'true');
+  } else {
+    changeErrorMsg.textContent = '❌ Gagal menyimpan. Password mungkin sudah pernah digunakan.';
+    this.disabled = false;
+    this.innerHTML = '<i class="fas fa-save"></i> Simpan';
+  }
+});
+
+// ========== RENDER DASHBOARD ==========
+function renderDashboard(data) {
+  const grid = document.getElementById('dashboardGrid');
+  
+  if (!data || data.length === 0) {
+    grid.innerHTML = `
+      <div class="empty-state">
+        <i class="fas fa-database"></i>
+        <h3>Belum Ada Data</h3>
+        <p>Silakan input data melalui <a href="admin-direksi.html" style="color:var(--green);font-weight:600;">Dashboard Admin</a></p>
+      </div>
+    `;
+    return;
+  }
+
+  const morningData = [];
+  const monitoringData = [];
+  
+  data.forEach(card => {
+    if (card.card === 'Monitoring & Evaluasi Kinerja Berjenjang') {
+      monitoringData.push(card);
+    } else {
+      morningData.push(card);
+    }
+  });
+
+  let html = '';
+  
+  if (morningData.length > 0) {
+    html += `
+      <div class="section-divider grid-divider">
+        <span class="line"></span>
+        <span class="label"><i class="fas fa-chart-pie"></i> MORNING DASHBOARD REVIEW</span>
+        <span class="line"></span>
+      </div>
+    `;
+
+    morningData.forEach((card) => {
+      let icon = 'fa-chart-simple';
+      if (card.card.includes('Operasional')) icon = 'fa-hospital-user';
+      else if (card.card.includes('Keuangan')) icon = 'fa-coins';
+      else if (card.card.includes('SDM')) icon = 'fa-user-md';
+      else if (card.card.includes('Mutu') || card.card.includes('Keselamatan')) icon = 'fa-shield-alt';
+      else if (card.card.includes('Digital') || card.card.includes('Infrastruktur')) icon = 'fa-microchip';
+      else if (card.card.includes('BPJS')) icon = 'fa-handshake';
+      else if (card.card.includes('Kemenkes')) icon = 'fa-building';
+
+      html += `
+        <div class="indicator-card" data-card="${card.card}">
+          <div class="card-header">
+            <i class="fas ${icon}"></i>
+            <h3>${card.card.toUpperCase()}</h3>
+          </div>
+          <div class="card-body">
+            <ul>
+      `;
+      card.items.forEach(item => {
+        html += `
+          <li>
+            ${item.label}
+            <a href="${item.url}" target="_blank" class="link-icon">
+              <i class="fas fa-external-link-alt"></i> Lihat
+            </a>
+          </li>
+        `;
+      });
+      html += `</ul></div></div>`;
+    });
+  }
+
+  if (monitoringData.length > 0) {
+    if (morningData.length > 0) {
+      html += `
+        <div class="section-divider grid-divider">
+          <span class="line"></span>
+          <span class="label"><i class="fas fa-chart-line"></i> MONITORING & EVALUASI</span>
+          <span class="line"></span>
+        </div>
+      `;
+    } else {
+      html += `
+        <div class="section-divider grid-divider">
+          <span class="line"></span>
+          <span class="label"><i class="fas fa-chart-line"></i> MONITORING & EVALUASI</span>
+          <span class="line"></span>
+        </div>
+      `;
+    }
+
+    monitoringData.forEach((card) => {
+      html += `
+        <div class="indicator-card" data-card="${card.card}">
+          <div class="card-header">
+            <i class="fas fa-chart-line"></i>
+            <h3>${card.card.toUpperCase()}</h3>
+          </div>
+          <div class="card-body">
+            <ul>
+      `;
+      card.items.forEach(item => {
+        html += `
+          <li>
+            ${item.label}
+            <a href="${item.url}" target="_blank" class="link-icon">
+              <i class="fas fa-external-link-alt"></i> Lihat
+            </a>
+          </li>
+        `;
+      });
+      html += `</ul></div></div>`;
+    });
+  }
+
+  if (morningData.length === 0 && monitoringData.length === 0) {
+    html = `
+      <div class="empty-state">
+        <i class="fas fa-database"></i>
+        <h3>Belum Ada Data</h3>
+        <p>Silakan input data melalui <a href="admin-direksi.html" style="color:var(--green);font-weight:600;">Dashboard Admin</a></p>
+      </div>
+    `;
+  }
+
+  grid.innerHTML = html;
+}
+
+function showLoading() {
+  const grid = document.getElementById('dashboardGrid');
+  grid.innerHTML = `
+    <div class="spinner-container">
+      <div class="spinner"></div>
+      <p>Memuat data...</p>
+    </div>
+  `;
+}
+
+function loadData() {
+  if (!isAuthenticated) return;
+  showLoading();
+  
+  fetch(APPS_SCRIPT_URL)
+    .then(res => {
+      if (!res.ok) throw new Error('Network error');
+      return res.json();
+    })
+    .then(data => {
+      renderDashboard(data);
+    })
+    .catch(() => {
+      const grid = document.getElementById('dashboardGrid');
+      grid.innerHTML = `
+        <div class="empty-state">
+          <i class="fas fa-exclamation-triangle"></i>
+          <h3>Gagal Memuat Data</h3>
+          <p>Periksa koneksi atau <a href="#" onclick="loadData();return false;" style="color:var(--green);font-weight:600;">coba lagi</a></p>
+        </div>
+      `;
+    });
+}
+
+// ========== INIT ==========
+(async function() {
+  if (sessionStorage.getItem(AUTH_KEY) === 'true') {
+    isAuthenticated = true;
+    overlay.classList.add('hidden');
+    await fetchPasswordFromSheet();
+    loadData();
+    return;
+  }
+  
+  overlay.classList.add('hidden');
+  await fetchPasswordFromSheet();
+  
+  if (sessionStorage.getItem(AUTH_KEY) === 'true') {
+    isAuthenticated = true;
+    overlay.classList.add('hidden');
+    loadData();
+  } else {
+    overlay.classList.remove('hidden');
+    passwordInput.focus();
+  }
+})();
+
+const header = document.getElementById('mainHeader');
+window.addEventListener('scroll', () => {
+  header.classList.toggle('scrolled', window.scrollY > 10);
+});
+</script>
+</body>
+</html>
