@@ -64,6 +64,11 @@ header.scrolled{box-shadow:0 8px 32px rgba(0,0,0,0.25);background:#ffffff;}
 }
 .logo .btn-group .btn-change-pwd:hover{background:#5a6268;}
 
+/* ===== SEMBUNYIKAN TOMBOL KETIKA BELUM LOGIN ===== */
+.logo .btn-group.hidden{
+  display:none !important;
+}
+
 .btn-logout{
   background:var(--red);
   color:#fff;
@@ -525,7 +530,8 @@ footer{
 </head>
 <body>
 
-<div class="password-overlay hidden" id="passwordOverlay">
+<!-- ===== PASSWORD OVERLAY ===== -->
+<div class="password-overlay" id="passwordOverlay">
   <div class="password-box">
     <div class="lock-icon">
       <i class="fas fa-lock"></i>
@@ -546,6 +552,7 @@ footer{
   </div>
 </div>
 
+<!-- ===== CHANGE PASSWORD MODAL ===== -->
 <div class="modal-overlay" id="changePasswordModal">
   <div class="modal-box">
     <h3><i class="fas fa-key"></i> Ubah Password</h3>
@@ -591,7 +598,8 @@ footer{
 <header id="mainHeader">
   <div class="logo">
     <img src="logopanjang.png" alt="Logo RSU An'Nimah">
-    <div class="btn-group">
+    <!-- ===== TOMBOL ACTION DISEMBUNYIKAN AWALNYA ===== -->
+    <div class="btn-group hidden" id="actionButtons">
       <button class="admin-badge btn-change-pwd" id="changePasswordBtn">
         <i class="fas fa-key"></i> Ubah Password
       </button>
@@ -701,8 +709,18 @@ const saveChangeBtn = document.getElementById('saveChangeBtn');
 const cancelChangeBtn = document.getElementById('cancelChangeBtn');
 const changeErrorMsg = document.getElementById('changeErrorMsg');
 const logoutBtn = document.getElementById('logoutBtn');
+const actionButtons = document.getElementById('actionButtons');
 
 let isAuthenticated = false;
+
+// ===== FUNGSI SHOW/HIDE TOMBOL ACTION =====
+function showActionButtons() {
+  actionButtons.classList.remove('hidden');
+}
+
+function hideActionButtons() {
+  actionButtons.classList.add('hidden');
+}
 
 function setupTogglePassword(buttonId, inputId) {
   const btn = document.getElementById(buttonId);
@@ -733,6 +751,7 @@ function checkAuthentication() {
   if (sessionStorage.getItem(AUTH_KEY) === 'true') {
     isAuthenticated = true;
     overlay.classList.add('hidden');
+    showActionButtons(); // TAMPILKAN TOMBOL
     return true;
   }
   return false;
@@ -749,6 +768,7 @@ async function login() {
     isAuthenticated = true;
     sessionStorage.setItem(AUTH_KEY, 'true');
     overlay.classList.add('hidden');
+    showActionButtons(); // TAMPILKAN TOMBOL SETELAH LOGIN
     errorMsg.textContent = '';
     passwordInput.value = '';
     loadData();
@@ -770,6 +790,7 @@ function logout() {
   sessionStorage.removeItem(AUTH_KEY);
   isAuthenticated = false;
   overlay.classList.remove('hidden');
+  hideActionButtons(); // SEMBUNYIKAN TOMBOL
   passwordInput.value = '';
   passwordInput.focus();
   errorMsg.textContent = '';
@@ -870,9 +891,27 @@ saveChangeBtn.addEventListener('click', async function() {
     this.innerHTML = '<i class="fas fa-save"></i> Simpan';
     sessionStorage.setItem(AUTH_KEY, 'true');
   } else {
-    changeErrorMsg.textContent = '❌ Gagal menyimpan. Password mungkin sudah pernah digunakan.';
+    changeErrorMsg.textContent = '❌ Gagal menyimpan.';
     this.disabled = false;
     this.innerHTML = '<i class="fas fa-save"></i> Simpan';
+  }
+});
+
+// ========== LISTENER PERUBAHAN sessionStorage ==========
+window.addEventListener('storage', function(e) {
+  if (e.key === AUTH_KEY) {
+    if (e.newValue === 'true') {
+      isAuthenticated = true;
+      overlay.classList.add('hidden');
+      showActionButtons();
+      loadData();
+    } else {
+      isAuthenticated = false;
+      overlay.classList.remove('hidden');
+      hideActionButtons();
+      passwordInput.value = '';
+      passwordInput.focus();
+    }
   }
 });
 
@@ -1037,9 +1076,13 @@ function loadData() {
 
 // ========== INIT ==========
 (async function() {
+  // Awalnya tombol action HIDDEN
+  hideActionButtons();
+  
   if (sessionStorage.getItem(AUTH_KEY) === 'true') {
     isAuthenticated = true;
     overlay.classList.add('hidden');
+    showActionButtons(); // TAMPILKAN KALAU SUDAH LOGIN
     await fetchPasswordFromSheet();
     loadData();
     return;
@@ -1051,9 +1094,11 @@ function loadData() {
   if (sessionStorage.getItem(AUTH_KEY) === 'true') {
     isAuthenticated = true;
     overlay.classList.add('hidden');
+    showActionButtons();
     loadData();
   } else {
     overlay.classList.remove('hidden');
+    hideActionButtons();
     passwordInput.focus();
   }
 })();
